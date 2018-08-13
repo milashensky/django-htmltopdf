@@ -1,0 +1,59 @@
+language: python
+python:
+  - "2.6"
+  - "2.7"
+  - "3.3"
+  - "3.4"
+  - "3.5"
+env:
+  - DJANGO="Django>=1.4,<1.5"
+  - DJANGO="Django>=1.5,<1.6"
+  - DJANGO="Django>=1.6,<1.7"
+  - DJANGO="Django>=1.7,<1.8"
+  - DJANGO="Django>=1.8,<1.9"
+  - DJANGO="Django>=1.9,<1.10"
+  - DJANGO="Django>=1.10,<2.0"
+
+matrix:
+  exclude:
+    - python: "2.6"
+      env: DJANGO="Django>=1.7,<1.8"
+    - python: "2.6"
+      env: DJANGO="Django>=1.8,<1.9"
+    - python: "2.6"
+      env: DJANGO="Django>=1.9,<1.10"
+    - python: "2.6"
+      env: DJANGO="Django>=1.10,<2.0"
+    - python: "3.3"
+      env: DJANGO="Django>=1.4,<1.5"
+    - python: "3.3"
+      env: DJANGO="Django>=1.9,<1.10"
+    - python: "3.3"
+      env: DJANGO="Django>=1.10,<2.0"
+    - python: "3.4"
+      env: DJANGO="Django>=1.4,<1.5"
+    - python: "3.5"
+      env: DJANGO="Django>=1.4,<1.5"
+    - python: "3.5"
+      env: DJANGO="Django>=1.5,<1.6"
+    - python: "3.5"
+      env: DJANGO="Django>=1.6,<1.7"
+    - python: "3.5"
+      env: DJANGO="Django>=1.7,<1.8"
+before_install:
+  - PWD=`pwd`
+  - echo '## Installing wkhtmltopdf dependencies'
+  - sudo apt-get update -qq
+  - sudo apt-get install -y libxrender1 libfontconfig1 zlib1g libfreetype6 libx11-6 libxext6
+  - echo '## Installing wkhtmltopdf'
+  - wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
+  - tar xf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
+  - export WKHTMLTOPDF_CMD="$PWD/wkhtmltox/bin/wkhtmltopdf"
+install:
+  - pip install $DJANGO
+  - pip install -r test_requirements.txt
+  - pip install .
+script:
+  - make test
+notifications:
+  email: false
