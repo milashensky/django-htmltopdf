@@ -8,7 +8,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     version=htmltopdf.__version__,
-    description='Converts HTML to PDF using athenapdf in docker.',
+    description='Converts HTML to PDF via athenapdf in docker.',
     long_description=open('README.rst').read(),
     license='BSD-2-Clause',
     author=htmltopdf.__author__,
