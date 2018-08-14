@@ -1,6 +1,8 @@
 django-htmltopdf
 ==================
 
+Bases on `incuna/django-wkhtmltopdf <https://github.com/incuna/django-wkhtmltopdf>`, but uses `arachnysdocker/athenapdf instead of wkhtmltopdf.
+
 Converts HTML to PDF
 --------------------
 
@@ -10,7 +12,7 @@ Provides Django views to wrap the HTML to PDF conversion. Based on `arachnys/ath
 Requirements
 ------------
 
-Requeres installed docker, docker-py and recimender to pull image of `arachnysdocker/athenapdf`
+Requires an docker, docker-py and and it also recommended to pull image of `arachnysdocker/athenapdf`
 
 
 `docker pull arachnysdocker/athenapdf`

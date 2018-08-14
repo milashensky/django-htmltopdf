@@ -14,6 +14,7 @@ from tempfile import NamedTemporaryFile
 from django.utils.encoding import smart_text
 from django.conf import settings
 from django.template import loader
+from django.utils.crypto import get_random_string
 
 from django.template.context import Context, RequestContext
 from django.utils import six
@@ -49,20 +50,19 @@ def htmltopdf(pages, output=None, **kwargs):
     example usage:
         wkhtmltopdf(pages=['/tmp/example.html'])
     """
-    client = docker.from_env()
+    try:
+        client = docker.DockerClient(**settings.HTMLTOPDF_DOCKER_OPTIONS)
+    except AttributeError:
+        client = docker.from_env()
     vol = {'/tmp': {'bind': '/converted/', 'mode': 'rw'}}
     command = "athenapdf {convert} ./out.pdf".format(convert=pages[0].replace('/tmp/', './'))
     try:
         image = client.images.get('arachnysdocker/athenapdf')
     except docker.errors.ImageNotFound:
-
         image = client.images.pull('arachnysdocker/athenapdf')
-    try:
-        client.containers.get('athenahtmltopdf').remove()
-    except docker.errors.NotFound:
-        pass
-    out = client.containers.run(image, command=command, volumes=vol, name="athenahtmltopdf")
-    client.containers.get('athenahtmltopdf').remove()
+    name = get_random_string(length=16, allowed_chars='ACTG')
+    out = client.containers.run(image, command=command, volumes=vol, name=name)
+    client.containers.get(name).remove()
     f = open('/tmp/out.pdf', 'rb')
     a = f.read()
     f.close()
